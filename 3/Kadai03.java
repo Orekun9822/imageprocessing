@@ -157,8 +157,7 @@ public class Kadai03 extends Application {
 	 ************************************************************************
 	 ************************************************************************/
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
-		int max = 0;
-		int min = 0;
+
 		int aryProcKido[][] = new int[width][height];
 
 		//2重のforで1画素ずつ処理を行う。
@@ -169,23 +168,39 @@ public class Kadai03 extends Application {
 			}
 		}
 
+		int max = aryProcKido[0][0];
+		int min = aryProcKido[0][0];
+
 		//LUTの生成
-		//LUT生成の仕方よくわからん
+		//まず輝度値の最小値、最大値を求める
 		for(int i=0;i<height; i++)
 		{
 			for(int j=0;j < width; j++)
 			{
-				if(min>=aryProcKido[i][j])
+				if(min>aryProcKido[j][i])
 				{
-					min = aryProcKido[i][j];
+					min = aryProcKido[j][i];
 				}
-				if(max<=aryProcKido[i][j])
+				if(max<aryProcKido[j][i])
 				{
-					max = aryProcKido[i][j];
+					max = aryProcKido[j][i];
 				}
 			}
 		}
-	
+		int LUT[] = new int[256];
+		for(int i=0;i<256;i++)
+		{
+			LUT[i] = (int)((double)(i-min)/(max-min)*255);
+		}
+		//LUTを用いて輝度値を変換する
+		for(int i=0;i<height; i++)
+		{
+			for(int j=0;j < width; j++)
+			{
+				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
+			}
+		}
+
 		return aryProcKido;
 	}
 	
