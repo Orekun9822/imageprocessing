@@ -16,7 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class Kadai03 extends Application {
+public class Kadai03_liner extends Application {
 
 	public static void main(String[] args){
         // メインメソッドから実行
@@ -30,7 +30,6 @@ public class Kadai03 extends Application {
 		Image img = new Image( "kousha2.jpg" );		//画像ファイルロード
     	int width = (int) img.getWidth();
         int height= (int) img.getHeight();
-		double gamma = 3;
     	
     	
 		//輝度値のみの配列を取得
@@ -39,7 +38,7 @@ public class Kadai03 extends Application {
     	WritableImage gImg1 = drawGrayImage(aryKido, width, height);		//原画像をグレイスケールに変換した描画用インスタンスの取得
 		
     	//画像処理の適用
-    	int aryProcKido[][] = imageProcessing(aryKido, width, height, gamma);		//画像処理後の輝度値配列を取得
+    	int aryProcKido[][] = imageProcessing(aryKido, width, height);		//画像処理後の輝度値配列を取得
     	
     	WritableImage gImg2 = drawGrayImage(aryProcKido, width, height);	//画像処理適用後の描画用インスタンスの取得
     	
@@ -52,7 +51,7 @@ public class Kadai03 extends Application {
 		grid.setVgap(10);								//各セルの上下間のギャップを10ピクセルに設定
 
     	//gridpaneの縦横セル数は自動的に指定した位置を基に最小限に自動決定される
-    	Text title0 = new Text("画像処理名:ガンマ変換 gamma = 3.0");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
+    	Text title0 = new Text("画像処理名:線形濃度変換");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
     	grid.add(title0,0,0);
     	//① (1,0)にタイトル「原画像」を、その下(2,0)に原画像を表示
     	Text title1 = new Text("原画像");
@@ -157,7 +156,7 @@ public class Kadai03 extends Application {
 	 **                                                                    **
 	 ************************************************************************
 	 ************************************************************************/
-	public int[][] imageProcessing(int[][] aryKido, int width, int height, double gamma) {
+	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
 
 		int aryProcKido[][] = new int[width][height];
 
@@ -174,7 +173,7 @@ public class Kadai03 extends Application {
 
 		//LUTの生成
 		//まず輝度値の最小値、最大値を求める
-		/*for(int i=0;i<height; i++)
+		for(int i=0;i<height; i++)
 		{
 			for(int j=0;j < width; j++)
 			{
@@ -199,15 +198,6 @@ public class Kadai03 extends Application {
 			for(int j=0;j < width; j++)
 			{
 				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
-			}
-		}*/
-		
-
-		for(int i=0;i<width;i++)
-		{
-			for(int j=0;j<height;j++)
-			{
-				aryProcKido[i][j] = (int)((255*(Math.pow((double)aryKido[i][j]/255, (double)1/gamma))));
 			}
 		}
 
