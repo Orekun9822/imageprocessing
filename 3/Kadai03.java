@@ -202,12 +202,17 @@ public class Kadai03 extends Application {
 			}
 		}*/
 		
-
-		for(int i=0;i<width;i++)
+		int LUT[] = new int[256];
+		for(int i=0;i<256;i++)
 		{
-			for(int j=0;j<height;j++)
+			LUT[i] = (int)((255*(Math.pow((double)i/255, (double)1/gamma))));
+		}
+		//LUTを用いて輝度値を変換する
+		for(int i=0;i<height; i++)
+		{
+			for(int j=0;j < width; j++)
 			{
-				aryProcKido[i][j] = (int)((255*(Math.pow((double)aryKido[i][j]/255, (double)1/gamma))));
+				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
 			}
 		}
 

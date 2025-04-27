@@ -187,7 +187,7 @@ public class Kadai03_liner extends Application {
 				}
 			}
 		}
-		int LUT[] = new int[256];
+		int LUT[] = new int[256]; 
 		for(int i=0;i<256;i++)
 		{
 			LUT[i] = (int)((double)(i-min)/(max-min)*255);
@@ -199,7 +199,9 @@ public class Kadai03_liner extends Application {
 			{
 				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
 			}
+
 		}
+		System.out.println("max:"+max +"min:"+min);
 
 		return aryProcKido;
 	}
