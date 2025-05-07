@@ -158,36 +158,34 @@ public class Kadai04 extends Application {
 	 ************************************************************************
 	 ************************************************************************/
 	public int[][] imageProcessing(int[][] aryKido, int width, int height, int[] gengaHist) {
-		int S =0;//全画素数
-		int mole=0;//分子
-		int aryProcKido[][] = new int[width][height];
-		int LUT[] = new int[256];
-		for(int i=0;i<256;i++)
-		{
-			S = S + gengaHist[i];
-		}
+        int S = 0;//全画素数
+        int mole = 0;//分子
+        int aryProcKido[][] = new int[width][height];
+        int LUT[] = new int[256];
 
-		for(int i=0;i<256;i++)
-		{
-			mole = 0;
-			for(int j=0;j<i;j++)
-			{
-				mole = mole + gengaHist[j];
-			}
-			LUT[i] = (int)((double)mole/S*255);
-		}
+        // (修正1) ヒストグラム全体を使って全画素数を計算する
+        for (int i = 0; i < 256; i++) {
+            S = S + gengaHist[i];
+        }
 
-		//LUTを用いて輝度値を変換する
-		for(int i=0;i<height; i++)
-		{
-			for(int j=0;j < width; j++)
-			{
-				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
-			}
-		}
+        for (int i = 0; i < 256; i++) {
+            mole = 0;
+            for (int j = 0; j <= i; j++) { // (修正2) 累積度数を計算するため、<= i に変更
+                mole = mole + gengaHist[j];
+            }
+            // (修正3) 0除算を避けるための処理を追加
+            LUT[i] = (S == 0) ? 0 : (int)((double)mole / S * 255);
+        }
 
-		return aryProcKido;
-	}
+        // (修正4) 元の輝度値配列aryKidoを使ってLUTを適用する
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                aryProcKido[j][i] = LUT[aryKido[j][i]];
+            }
+        }
+
+        return aryProcKido;
+    }
 	
 	/************************************************************************
 	 * 
