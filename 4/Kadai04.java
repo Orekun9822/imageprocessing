@@ -37,9 +37,10 @@ public class Kadai04 extends Application {
 		int aryKido[][] = getLuminanceArray(img, width, height);			//原画像の輝度値配列を取得
     	
     	WritableImage gImg1 = drawGrayImage(aryKido, width, height);		//原画像をグレイスケールに変換した描画用インスタンスの取得
-		
+
+		int[] gengaHist = getHistArray(aryKido, width, height);	//(1)仮のヒストグラム配列の取得。画像の濃度値配列を関数に渡し、ヒストグラム配列を受け取るようにする。
     	//画像処理の適用
-    	int aryProcKido[][] = imageProcessing(aryKido, width, height, gamma);		//画像処理後の輝度値配列を取得
+    	int aryProcKido[][] = imageProcessing(aryKido, width, height, gengaHist);		//画像処理後の輝度値配列を取得
     	
     	WritableImage gImg2 = drawGrayImage(aryProcKido, width, height);	//画像処理適用後の描画用インスタンスの取得
     	
@@ -65,7 +66,6 @@ public class Kadai04 extends Application {
     	
     	
     	//***** 原画像ヒストグラムの描画処理 *****
-    	int[] gengaHist = getHistArray(aryKido, width, height);	//(1)仮のヒストグラム配列の取得。画像の濃度値配列を関数に渡し、ヒストグラム配列を受け取るようにする。
     	Canvas gengaCanvas = drawChart(gengaHist,256,200);		//(2)ヒストグラム配列を基に、グラフを描画したCanvasを作成する。2つの引数は描画するグラフのサイズである。
     	grid.add(gengaCanvas,0,3);								//(3)GridPaneの3行0列に原画像のCanvasインスタンスを追加
     	
@@ -157,56 +157,26 @@ public class Kadai04 extends Application {
 	 **                                                                    **
 	 ************************************************************************
 	 ************************************************************************/
-	public int[][] imageProcessing(int[][] aryKido, int width, int height, double gamma) {
-		int ave[][] = new int[width][height];	//平均値を格納する配列
+	public int[][] imageProcessing(int[][] aryKido, int width, int height, int[] gengaHist) {
+		int S =0;//全画素数
+		int mole=0;//分子
 		int aryProcKido[][] = new int[width][height];
-
-		//2重のforで1画素ずつ処理を行う。
-		for(int y=0; y < height; y++ ){
-			for(int x=0; x < width; x++ ){
-				
-				aryProcKido[x][y] = aryKido[x][y];
-			}
-		}
-
-		int max = aryProcKido[0][0];
-		int min = aryProcKido[0][0];
-
-		//LUTの生成
-		//まず輝度値の最小値、最大値を求める
-		/*for(int i=0;i<height; i++)
-		{
-			for(int j=0;j < width; j++)
-			{
-				if(min>aryProcKido[j][i])
-				{
-					min = aryProcKido[j][i];
-				}
-				if(max<aryProcKido[j][i])
-				{
-					max = aryProcKido[j][i];
-				}
-			}
-		}
 		int LUT[] = new int[256];
 		for(int i=0;i<256;i++)
 		{
-			LUT[i] = (int)((double)(i-min)/(max-min)*255);
+			S = S + gengaHist[i];
 		}
-		//LUTを用いて輝度値を変換する
-		for(int i=0;i<height; i++)
-		{
-			for(int j=0;j < width; j++)
-			{
-				aryProcKido[j][i] = LUT[aryProcKido[j][i]];
-			}
-		}*/
-		
-		int LUT[] = new int[256];
+
 		for(int i=0;i<256;i++)
 		{
-			LUT[i] = (int)((255*(Math.pow((double)i/255, (double)1/gamma))));
+			mole = 0;
+			for(int j=0;j<i;j++)
+			{
+				mole = mole + gengaHist[j];
+			}
+			LUT[i] = (int)((double)mole/S*255);
 		}
+
 		//LUTを用いて輝度値を変換する
 		for(int i=0;i<height; i++)
 		{
