@@ -1,3 +1,4 @@
+import java.lang.Math;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -78,33 +79,39 @@ public class Kadai05_gaussian extends Application {
 	 ************************************************************************
 	 ************************************************************************/
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
-		
-		int aryProcKido[][] = new int[width][height];
-		//ガウシアンフィルタ適応
-		for(int i=0; i < width; i++)
-		{
-			for(int j=0; j < height; j++)
-			{
-				int sum = 0;
-				int count = 0;
-				for(int k=-1; k <= 1; k++)
-				{
-					for(int l=-1; l <= 1; l++)
-					{
-						if(i+k >= 0 && i+k < width && j+l >= 0 && j+l < height)
-						{
-							sum += aryKido[i+k][j+l];
-							count++;
-						}
-					}
-				}
-				aryProcKido[i][j] = sum / count;
-			}
-		}
-		
-		
-		return aryProcKido;
-	}
+
+         int aryProcKido[][] = new int[width][height];
+
+         // 3x3 ガウシアンフィルタのカーネル (σ=1の場合の近似)
+         double[][] kernel = {
+                 {1.0/16, 2.0/16, 1.0/16},
+                 {2.0/16, 4.0/16, 2.0/16},
+                 {1.0/16, 2.0/16, 1.0/16}
+         };
+         int kernelSize = 3;
+         int offset = kernelSize / 2;
+
+         for(int i=0; i < width; i++)
+         {
+             for(int j=0; j < height; j++){
+                 double sum = 0;
+
+                 for(int ky = -offset; ky <= offset; ky++) {
+                     for(int kx = -offset; kx <= offset; kx++) {
+                         int x = i + kx;
+                         int y = j + ky;
+
+                         // 画像の範囲内かチェック
+                         if (x >= 0 && x < width && y >= 0 && y < height) {
+                             sum += aryKido[x][y] * kernel[ky + offset][kx + offset];
+                         }
+                     }
+                 }
+                 aryProcKido[i][j] = (int) Math.round(sum); // 結果を整数に丸める
+             }
+         }
+         return aryProcKido;
+     }
 	
 	/************************************************************************
 	 * 
