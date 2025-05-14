@@ -48,7 +48,7 @@ public class Kadai05_gaussian extends Application {
 		grid.setVgap(10);								//各セルの上下間のギャップを10ピクセルに設定
 
     	//gridpaneの縦横セル数は自動的に指定した位置を基に最小限に自動決定される
-    	Text title0 = new Text("画像処理名:濃度反転");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
+    	Text title0 = new Text("画像処理名:ガウシアンフィルタ");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
     	grid.add(title0,0,0);
     	//① (1,0)にタイトル「原画像」を、その下(2,0)に原画像を表示
     	Text title1 = new Text("原画像");
