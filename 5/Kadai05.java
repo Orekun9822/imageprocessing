@@ -80,7 +80,27 @@ public class Kadai05 extends Application {
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
 		
 		int aryProcKido[][] = new int[width][height];
-
+		//平均値フィルタ適応
+		for(int i=0; i < width; i++)
+		{
+			for(int j=0; j < height; j++)
+			{
+				int sum = 0;
+				int count = 0;
+				for(int k=-1; k <= 1; k++)
+				{
+					for(int l=-1; l <= 1; l++)
+					{
+						if(i+k >= 0 && i+k < width && j+l >= 0 && j+l < height)
+						{
+							sum += aryKido[i+k][j+l];
+							count++;
+						}
+					}
+				}
+				aryProcKido[i][j] = sum / count;
+			}
+		}
 		
 		
 		return aryProcKido;
