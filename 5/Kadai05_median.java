@@ -1,4 +1,3 @@
-import java.lang.Math;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -12,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
-public class Kadai05_gaussian extends Application {
+public class Kadai05_median extends Application {
 	
 	public static void main(String[] args){
  
@@ -48,7 +47,7 @@ public class Kadai05_gaussian extends Application {
 		grid.setVgap(10);								//各セルの上下間のギャップを10ピクセルに設定
 
     	//gridpaneの縦横セル数は自動的に指定した位置を基に最小限に自動決定される
-    	Text title0 = new Text("画像処理名:ガウシアンフィルタ");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
+    	Text title0 = new Text("画像処理名:中央値フィルタ");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
     	grid.add(title0,0,0);
     	//① (1,0)にタイトル「原画像」を、その下(2,0)に原画像を表示
     	Text title1 = new Text("原画像");
@@ -82,32 +81,35 @@ public class Kadai05_gaussian extends Application {
 
          int aryProcKido[][] = new int[width][height];
 
-         // 3x3 ガウシアンフィルタのカーネル (σ=1の場合の近似)
-         double[][] kernel = {
-                 {1.0/16, 2.0/16, 1.0/16},
-                 {2.0/16, 4.0/16, 2.0/16},
-                 {1.0/16, 2.0/16, 1.0/16}
-         };
-         int kernelSize = 3;
-         int offset = kernelSize / 2;
-
-         for(int i=0; i < width; i++)
-         {
-             for(int j=0; j < height; j++){
-                 double sum = 0;
-
-                 for(int ky = -offset; ky <= offset; ky++) {
-                     for(int kx = -offset; kx <= offset; kx++) {
-                         int x = i + kx;
-                         int y = j + ky;
-
-                         // 画像の範囲内かチェック
-                         if (x >= 0 && x < width && y >= 0 && y < height) {
-                             sum += aryKido[x][y] * kernel[ky + offset][kx + offset];
+         for(int y=0; y < height; y++){
+             for(int x=0; x < width; x++){
+                 if (x > 0 && x < width - 1 && y > 0 && y < height - 1) {
+                     int median[] = new int [9];
+                     median[0] = aryKido[x-1][y-1];
+                     median[1] = aryKido[x][y-1];
+                     median[2] = aryKido[x+1][y-1];
+                     median[3] = aryKido[x-1][y];
+                     median[4] = aryKido[x][y];
+                     median[5] = aryKido[x+1][y];
+                     median[6] = aryKido[x-1][y+1];
+                     median[7] = aryKido[x][y+1];
+                     median[8] = aryKido[x+1][y+1];
+                     //中央値を求める（バブルソート）
+                     for(int i=0; i < median.length-1; i++){
+                         for(int j=i+1; j < median.length; j++){
+                             if(median[i] > median[j]){
+                                 int temp = median[i];
+                                 median[i] = median[j];
+                                 median[j] = temp;
+                             }
                          }
                      }
+                     //中央値を格納する
+                     aryProcKido[x][y] = median[4];
+                 } else {
+                     // 端のピクセルは元の値をそのまま格納
+                     aryProcKido[x][y] = aryKido[x][y];
                  }
-                 aryProcKido[i][j] = (int) Math.round(sum); // 結果を整数に丸める
              }
          }
          return aryProcKido;
