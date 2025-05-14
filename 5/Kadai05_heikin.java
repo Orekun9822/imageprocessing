@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
-public class Kadai05 extends Application {
+public class Kadai05_heikin extends Application {
 	
 	public static void main(String[] args){
  
