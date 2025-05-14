@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
-public class Kadai05_heikin extends Application {
+public class Kadai05_gaussian extends Application {
 	
 	public static void main(String[] args){
  
@@ -47,7 +47,7 @@ public class Kadai05_heikin extends Application {
 		grid.setVgap(10);								//各セルの上下間のギャップを10ピクセルに設定
 
     	//gridpaneの縦横セル数は自動的に指定した位置を基に最小限に自動決定される
-    	Text title0 = new Text("画像処理名:平均値フィルタ");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
+    	Text title0 = new Text("画像処理名:濃度反転");	//① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
     	grid.add(title0,0,0);
     	//① (1,0)にタイトル「原画像」を、その下(2,0)に原画像を表示
     	Text title1 = new Text("原画像");
@@ -80,35 +80,25 @@ public class Kadai05_heikin extends Application {
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
 		
 		int aryProcKido[][] = new int[width][height];
-		//平均値フィルタ適応
+		//ガウシアンフィルタ適応
 		for(int i=0; i < width; i++)
 		{
 			for(int j=0; j < height; j++)
 			{
-				double sum = 0;
-            	int count = 0;
-
-            	// 周囲9ピクセルの濃度値を合計
-            	for (int x = i - 1; x <= i + 1; x++) {
-                	for (int y = j - 1; y <= j + 1; y++) {
-                    	if (x >= 0 && x < width && y >= 0 && y < height) {
-                        	sum += aryKido[x][y];
-                        	count++;
-                    	}
-                	}
-            	}
-
-            	// 平均値を計算
-            	aryProcKido[i][j] = (int)(sum / count);
-
-            	// 濃度値が255を超えた場合は255にする
-            	if(aryProcKido[i][j] > 255){
-                	aryProcKido[i][j] = 255;
-            	}
-            	// 濃度値が0未満の場合は0にする
-            	if(aryProcKido[i][j] < 0){
-                	aryProcKido[i][j] = 0;
-            	}
+				int sum = 0;
+				int count = 0;
+				for(int k=-1; k <= 1; k++)
+				{
+					for(int l=-1; l <= 1; l++)
+					{
+						if(i+k >= 0 && i+k < width && j+l >= 0 && j+l < height)
+						{
+							sum += aryKido[i+k][j+l];
+							count++;
+						}
+					}
+				}
+				aryProcKido[i][j] = sum / count;
 			}
 		}
 		
