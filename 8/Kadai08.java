@@ -50,29 +50,28 @@ public class Kadai08 extends Application {
         grid.setHgap(10);                                  //各セルの左右間のギャップを10ピクセルに設定
         grid.setVgap(10);                                  //各セルの上下間のギャップを10ピクセルに設定
 
-        // --- テンプレートマッチング処理 ---
         double maxZNCC = -1.0; // ZNCCは-1から1の範囲なので、初期値は-1.0
-        int bestX = -1;
-        int bestY = -1;
+        int maxX = -1;
+        int maxY = -1;
 
         // 探索範囲は、ターゲット画像内でテンプレート画像がはみ出さない範囲
         for (int y = 0; y <= height1 - height2; y++) {
             for (int x = 0; x <= width1 - width2; x++) {
-                double currentZNCC = calcZNCC(aryKido1, width1, height1, x, y, aryKido2, height2, width2);
+                double ZNCC = calcZNCC(aryKido1, width1, height1, x, y, aryKido2, height2, width2);
 
-                if (currentZNCC > maxZNCC) {
-                    maxZNCC = currentZNCC;
-                    bestX = x;
-                    bestY = y;
+                if (ZNCC > maxZNCC) {
+                    maxZNCC = ZNCC;
+                    maxX = x;
+                    maxY = y;
                 }
             }
         }
 
-        System.out.println("R_ZNCCが最大となるkousha.jpg上の座標(x,y) = (" + bestX + ", " + bestY + ")");
+        System.out.println("R_ZNCCが最大となるkousha.jpg上の座標(x,y) = (" + maxX + ", " + maxY + ")");
         System.out.println("R_ZNCCの値 = " + maxZNCC);
 
         //gridpaneの縦横セル数は自動的に指定した位置を基に最小限に自動決定される
-        Text title0 = new Text("画像処理名:テンプレートマッチング\nR_ZNCC＝ " + String.format("%.4f", maxZNCC) + "\n座標(x,y)=(" + bestX + ", " + bestY + ")");  //① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
+        Text title0 = new Text("画像処理名:テンプレートマッチング\nR_ZNCC＝ " + String.format("%.4f", maxZNCC) + "\n座標(x,y)=(" + maxX + ", " + maxY + ")");  //① 上部タイトルを(0,0)に配置。引数は 列,行 の順に指定。
         grid.add(title0,0,0);
         //① (1,0)にタイトル「原画像」を、その下(2,0)に原画像を表示
         Text title1 = new Text("テンプレート画像");
@@ -113,7 +112,6 @@ public class Kadai08 extends Application {
         double sumF = 0;
         double sumG = 0;
 
-        // Calculate mean of target window (f_bar)
         for (int y = 0; y < templateHeight; y++) {
             for (int x = 0; x < templateWidth; x++) {
                 sumF += targetImage[startX + x][startY + y];
@@ -121,7 +119,6 @@ public class Kadai08 extends Application {
         }
         double meanF = sumF / (templateWidth * templateHeight);
 
-        // Calculate mean of template (g_bar)
         for (int y = 0; y < templateHeight; y++) {
             for (int x = 0; x < templateWidth; x++) {
                 sumG += templateImage[x][y];
@@ -130,8 +127,8 @@ public class Kadai08 extends Application {
         double meanG = sumG / (templateWidth * templateHeight);
 
         double numerator = 0;
-        double sumFSquaredDiff = 0; // Sum of (f(x,y) - f_bar)^2
-        double sumGSquaredDiff = 0; // Sum of (g(x,y) - g_bar)^2
+        double sumFSquaredDiff = 0; 
+        double sumGSquaredDiff = 0;
 
         for (int y = 0; y < templateHeight; y++) {
             for (int x = 0; x < templateWidth; x++) {
@@ -147,40 +144,13 @@ public class Kadai08 extends Application {
         double denominator = Math.sqrt(sumFSquaredDiff * sumGSquaredDiff);
 
         if (denominator == 0) {
-            return 0; // Avoid division by zero, or handle as appropriate for ZNCC (e.g., return 1 if numerator is also 0)
+            return 0; 
         }
 
         double zncc = numerator / denominator;
         return zncc;
     }
 
-
-    /************************************************************************
-     ************************************************************************
-     ** **
-     ** 課題に応じた処理を記載するメソッド                                  **
-     ** グレースケール画像の濃度値配列配列cpyKidoを基に                   **
-     ** 処理結果の輝度値配列aryProcKidoを生成して返す                       **
-     ** **
-     ************************************************************************
-     ************************************************************************/
-    public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
-
-        int aryProcKido[][] = new int[width][height];
-
-        // This method is not explicitly used for the template matching itself,
-        // but it's part of the provided structure. For template matching,
-        // we directly work with aryKido1 and aryKido2.
-        // Copying the image as a placeholder.
-        for(int y=0; y < height; y++ ){
-            for(int x=0; x < width; x++ ){
-
-                aryProcKido[x][y] = aryKido[x][y];
-            }
-        }
-
-        return aryProcKido;
-    }
 
     /************************************************************************
      *
