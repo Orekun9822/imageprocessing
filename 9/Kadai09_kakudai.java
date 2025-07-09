@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 
-public class Kadai09 extends Application {
+public class Kadai09_kakudai extends Application {
 	
 	public static void main(String[] args){
  
@@ -78,8 +78,15 @@ public class Kadai09 extends Application {
 	 ************************************************************************
 	 ************************************************************************/
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
-		
 		int aryProcKido[][] = new int[width][height];
+		//画像の拡大を行うアフィン変換の行列
+		int[][] affineMatrix = {
+			{2, 0, 0}, // x方向の拡大率
+			{0, 2, 0}, // y方向の拡大率
+			{0, 0, 1}  // 同次座標のための行
+		};
+		
+		/*int aryProcKido[][] = new int[width][height];
 
 		//2重のforで1画素ずつ処理を行う。
 		for(int y=0; y < height; y++ ){
@@ -87,7 +94,7 @@ public class Kadai09 extends Application {
 				
 				aryProcKido[x][y] = 255 - aryKido[x][y];
 			}
-		}
+		}*/
 		
 		return aryProcKido;
 	}
