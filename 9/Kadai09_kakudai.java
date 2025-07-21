@@ -36,7 +36,7 @@ public class Kadai09_kakudai extends Application {
     	//画像処理の適用
     	int aryProcKido[][] = imageProcessing(aryKido, width, height);		//画像処理後の輝度値配列を取得
     	
-    	WritableImage gImg2 = drawGrayImage(aryProcKido, width, height);	//画像処理適用後の描画用インスタンスの取得
+    	WritableImage gImg2 = drawGrayImage(aryProcKido, 2*width, 2*height);	//画像処理適用後の描画用インスタンスの取得
     	
 		ImageView imgView1 = new ImageView( gImg1 );	//ImageVew生成
 		ImageView imgView2 = new ImageView( gImg2 );	//ImageVew生成
@@ -80,11 +80,27 @@ public class Kadai09_kakudai extends Application {
 	public int[][] imageProcessing(int[][] aryKido, int width, int height ) {
 		int aryProcKido[][] = new int[width][height];
 		//画像の拡大を行うアフィン変換の行列
-		int[][] affineMatrix = {
-			{2, 0, 0}, // x方向の拡大率
-			{0, 2, 0}, // y方向の拡大率
-			{0, 0, 1}  // 同次座標のための行
+		int[][] affineMatrix = {//2倍に拡大
+			{2, 0, 0}, 
+			{0, 2, 0}, 
+			{0, 0, 1}  
 		};
+		//画像の拡大を行うアフィン変換の逆行列
+		int[][] inverseAffineMatrix = {//2倍に拡大
+			{1/2, 0, 0}, 
+			{0, 1/2, 0}, 
+			{0, 0, 1}  
+		};
+		//アフィン変換を行う
+		for(int i=0; i < height; i++ ){
+			for(int j=0; j < width; j++ ){
+				//アフィン変換の行列を適用して新しい座標を計算
+				int newX = (int)(inverseAffineMatrix[0][0] * j + inverseAffineMatrix[0][1] * i + inverseAffineMatrix[0][2]);
+				int newY = (int)(inverseAffineMatrix[1][0] * j + inverseAffineMatrix[1][1] * i + inverseAffineMatrix[1][2]);
+			}
+		}
+		//新しい座標と元の座標を
+
 		
 		/*int aryProcKido[][] = new int[width][height];
 
