@@ -9,8 +9,8 @@ public class Kadai10 {
        Complex[] signal1 = new Complex[10];
 		Random rdm = new Random();
 		for(int i = 0; i < 10; i++){
-			//Complex objComp = new Complex(10*rdm.nextDouble(),10*rdm.nextDouble());	//複素信号の生成
-			Complex objComp = new Complex(10*rdm.nextDouble(),0);	//実数信号成分の生成
+			Complex objComp = new Complex(10*rdm.nextDouble(),10*rdm.nextDouble());	//複素信号の生成
+			//Complex objComp = new Complex(10*rdm.nextDouble(),0);	//実数信号成分の生成
 			signal1[i] = objComp;				//複素信号の作成：先頭から順に成分を追加。
 		}
 
